@@ -6,6 +6,12 @@ from ddt import ddt, data
 @ddt
 class VercheckTests(unittest.TestCase):
 
+    def test_read_requirements(self):
+        vercheck_list = vercheck.read_requirements('unittest.txt')
+        test_list = [('pbr', '1.9.1'), ('mod-wsgi-httpd', '2.4.12.6'), ('selenium', '2.53.1'),
+                     ('virtualenv-clone', '0.2.6')]
+        self.assertEqual(vercheck_list, test_list)
+
     @data([('ddt', '1.0.1'), ('django', '1.9.5'), ('pbr', '1.9.1')],
           [('six', '1.10.0'), ('selenium', '2.53.1'), ('virtualenv-clone', '0.2.6')])
     def test_existence_and_version_of_required_modules(self, data):
@@ -25,6 +31,7 @@ class VercheckTests(unittest.TestCase):
                     self.assertFalse(j.exists)
                     self.assertFalse(j.up_to_date)
                     self.assertEqual(j.version, None)
+
 
     '''
     @data([('ddt', '99.0.1'), ('django', '199.9.5'), ('pbr', '199.9.1'),

@@ -1,12 +1,11 @@
 from sys import argv
-import vercheck
+from vercheck import *
 
-req_libs = [('ddt', '1.0.1'), ('Kanae', '1')]
-vercheck.check_libs(req_libs)
-for i in vercheck.required_modules:
-    i.print_module()
-
-
+list_requirements('text_file')
+check_libs(required_modules)
+print_required_modules()
+log_required_modules('Test log.txt')
+'''
 script, file = argv
 f = open(file, 'r')
 try:
@@ -18,3 +17,4 @@ except FileNotFoundError:
     print("File not found.")
 finally:
     f.close()
+'''

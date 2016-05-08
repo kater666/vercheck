@@ -1,10 +1,15 @@
 from sys import argv
 from vercheck import *
 
-list_requirements('text_file')
-check_libs(required_modules)
-print_required_modules()
-log_required_modules('Test log.txt')
+inst = list_installed_modules()
+req_mods = list_requirements('text_file')
+check_libs(req_mods)
+#print_required_modules()
+log_required_modules('test_log.txt')
+create_install_script('test_install_script')
+#execute_install_script('test_install_script')
+
+
 '''
 script, file = argv
 f = open(file, 'r')

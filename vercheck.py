@@ -1,10 +1,13 @@
 import sys
 import pip
 
+from time import sleep
+from subprocess import call
 from get_current_time import get_current_time
 
 required_modules = []
 installed_modules = []
+missing_outdated_modules = []
 
 
 class Mods(object):
@@ -27,16 +30,6 @@ class Mods(object):
 def vrs():
     ver = sys.version.split(" ")[0]
     return ver
-
-
-def check_py2():
-    if vrs()[0] == '2':
-        print("You are using Python 2.")
-
-
-def check_py3():
-    if vrs()[0] == '3':
-        print("You are using Python 3.")
 
 
 def read_requirements(file):
@@ -67,7 +60,7 @@ def list_installed_modules():
     inst = pip.get_installed_distributions()
     for i in inst:
         installed_modules.append((i.key, i.version))
-    installed_modules.sort()
+    return sorted(installed_modules)
 
 
 def make_list(modules):
@@ -79,6 +72,8 @@ def make_list(modules):
         if name not in names:
             x = Mods(name, ver)
             required_modules.append(x)
+            if not x.exists or not x.up_to_date:
+                missing_outdated_modules.append(x)
 
 
 def list_requirements(file):
@@ -109,7 +104,7 @@ def log_required_modules(filename, path='./'):
                     "Required version: %s\n" % i.req_version +
                     "Actual version: %s\n" % i.version +
                     "Exists: %s\n" % str(i.exists) +
-                    "Is up to date %s\n" % str(i.up_to_date) + '\n')
+                    "Is up to date: %s\n" % str(i.up_to_date) + '\n')
     finally:
         f.close()
 
@@ -134,19 +129,57 @@ def check_libs(mod_list=[]):
                     i.version = j[1]
 
 
+def create_install_script(filename, password=None, path='./'):
+    """
+    Creates a script that will install missing or update outdated modules
+    using pip. Unfortunately requires user's password for sudo.
+    """
+    missing = []
+    outdated = []
+
+    if len(missing) or len(outdated) == 0:
+        sys.exit()
+
+    for i in missing_outdated_modules:
+        if not i.exists:
+            missing.append(i.name)
+        elif not i.up_to_date:
+            outdated.append(i.name)
+
+    install_script = open(path + filename, 'w')
+    try:
+        install_script.write("#! /bin/bash\n"
+                             "# This script will install modules:\n"
+                             "# %s\n" % missing)
+        if vrs()[0] == '2':
+            for j in missing:
+                install_script.write("sudo pip install %s\n" % j)
+        elif vrs()[0] == '3':
+            for j in missing:
+                install_script.write("sudo pip3 install %s\n" % j)
+                if password is None:
+                    pass
+                else:
+                    install_script.write("%s" % password)
+
+    finally:
+        install_script.close()
+
+
+def execute_install_script(filename, path='./'):
+    if path != './':
+        call("chmod u+x %s" % path + filename)
+        call("%s" % path + filename)
+    else:
+        call(["chmod", "u+x", "%s" % filename])
+        call("./%s" % filename)
+
+
 if __name__ == '__main__':
     list_installed_modules()
 else:
     list_installed_modules()
 
-
-"""
-    list_installed_modules()
-    list_requirements('text_file')
-    check_libs(required_modules)
-    print_required_modules()
-    log_required_modules('file name')
-"""
 
 # niech wypisze, ktory modul jest osrany,
 # ktorego brakuje itd.

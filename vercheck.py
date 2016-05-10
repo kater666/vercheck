@@ -3,7 +3,9 @@ import pip
 
 from time import sleep
 from subprocess import call
-from get_current_time import get_current_time
+from main.get_current_time import get_current_time
+
+sys.path.append('./')
 
 required_modules = []
 installed_modules = []
@@ -137,19 +139,22 @@ def create_install_script(filename, password=None, path='./'):
     missing = []
     outdated = []
 
-    if len(missing) or len(outdated) == 0:
-        sys.exit()
-
     for i in missing_outdated_modules:
         if not i.exists:
             missing.append(i.name)
         elif not i.up_to_date:
             outdated.append(i.name)
 
-    install_script = open(path + filename, 'w')
+    if len(missing) == 0 and len(outdated) == 0:
+        sys.exit()
+    else:
+        install_script = open(path + filename, 'w')
+
     try:
-        install_script.write("#! /bin/bash\n"
-                             "# This script will install modules:\n"
+        time = get_current_time()
+        install_script.write("#! /bin/bash\n" +
+                             "%s\n" % time +
+                             "# This script will install modules:\n" +
                              "# %s\n" % missing)
         if vrs()[0] == '2':
             for j in missing:
@@ -167,6 +172,7 @@ def create_install_script(filename, password=None, path='./'):
 
 
 def execute_install_script(filename, path='./'):
+    """Execute previously created install script"""
     if path != './':
         call("chmod u+x %s" % path + filename)
         call("%s" % path + filename)
@@ -187,3 +193,5 @@ else:
 # - Python - wersja
 # - libs - (nazwa, wersja)
 # jezeli brak modulu stworz skrypt instalujacy
+
+# do execute_install_script dodac zabezpieczenie gdy skrypt nie istnieje

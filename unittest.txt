@@ -1,4 +1,0 @@
-Line
-
-Required modules: pbr - 1.9.1, mod-wsgi-httpd - 2.4.12.6
-Required modules: selenium - 2.53.1, virtualenv-clone - 0.2.6

@@ -1,8 +1,0 @@
-Line 1
-Required modules: ddt - 1.0.1, django - 1.9.5
-Line 3
-Line 4
-Line 5
-Required modules: selenium - 2.53.2
-Line 6
-Required modules: selenium - 2.53.2, virtualenv-clone - 0.2.6

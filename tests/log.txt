@@ -1,0 +1,30 @@
+[2016/05/10 18:35:23] log.txt
+
+Module
+Name: ddt
+Required version: 1.0.1
+Actual version: 1.0.1
+Exists: True
+Is up to date: True
+
+Module
+Name: django
+Required version: 1.9.5
+Actual version: 1.9.5
+Exists: True
+Is up to date: True
+
+Module
+Name: selenium
+Required version: 2.53.2
+Actual version: 2.53.2
+Exists: True
+Is up to date: True
+
+Module
+Name: virtualenv-clone
+Required version: 0.2.6
+Actual version: 0.2.6
+Exists: True
+Is up to date: True
+
